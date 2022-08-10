@@ -1,0 +1,1180 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Capstone-tim1/PetAdopter-tim1/1.0.0
+info:
+  description: This is a Pet Adopter API
+  version: "1.0.0"
+  title: Pet Adopter API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Authentication
+    description: Untuk authentikasi
+  - name: Users
+    description: Untuk mengatur user
+  - name: Pets
+    description: Untuk mengatur pet
+  - name: Adoptions
+    description: Untuk mengatur adoption
+  - name: Meetings
+    description: Untuk mengatur meeting 
+  - name: Species
+    description: Untuk mengatur species  
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      summary: user login
+      description:
+        fitur untuk login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              username: JohnKecoak
+              password: John123
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Login success
+                data :
+                  token: $6jdl1DLncjapRndmVcOkdT724Nxcv
+                  role: admin
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Wrong username or password
+        '500':
+          $ref: "#/components/responses/500"
+  /oauth2/signup:
+    post:
+      tags:
+        - Google
+      summary: user signup dengan google account
+      description:
+        fitur untuk login
+      responses:
+        '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 200
+                  message: Register success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Wrong input data
+        '409':
+          $ref: "#/components/responses/409"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+  /users: 
+    post:
+      tags:
+        - Users
+      summary: user registration
+      description: fitur untuk register user
+      requestBody:
+         content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/UserData'
+                example:
+                  username: Jacob
+                  fullname: Jacob Capung
+                  email: Jacob@alterra.id
+                  address: jln.cijantung
+                  city: Jakarata
+                  password: jacob123
+                  phonenumber: "081234567891"
+      responses:
+        '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 200
+                  message: Register success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Wrong input data
+        '409':
+          $ref: "#/components/responses/409"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+    get:
+      tags:
+        - Users
+      summary: my profile
+      description: fitur untuk menampilkan profil data user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserData'
+              example:
+                data:
+                  photoprofile: jacob.jpg
+                  username: Jacob
+                  fullname: Jacob Capung
+                  email: Jacob@alterra.id
+                  address: jln.cijantung
+                  city: Jakarata
+                  phonenumber: "081234567891"
+                code: 200
+                message: get data success
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+    put:
+      tags:
+        - Users
+      summary: update user profile
+      description: fitur untuk memperbarui profil data user
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/UserData'
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/UserData'
+                example:
+                  photoprofile: jacob.jpg
+                  username: Jacob
+                  fullname: Jacob Cupang
+                  email: Jacob@alterra.id
+                  address: jln.cijantung
+                  city: Jakarata
+                  phonenumber: "081234567891"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success update data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Please enter data correctly
+        '404':
+          $ref: "#/components/responses/404"
+        '409':
+          $ref: "#/components/responses/409"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Users
+      summary: delete user account
+      description: fitur untuk menghapus akun user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 200
+                message: Success delete account
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /pets:
+    post:
+      tags:
+        - Pets
+      summary: Post user pets
+      description: fitur untuk posting pets
+      security:
+        - bearerAuth: []
+      requestBody:
+         content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/PetData'
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/PetData'
+                example:
+                  petname: Tom
+                  petphoto: Tom.jpg
+                  species: Kucing
+                  gender: 1
+                  age: 12
+                  color: Blue
+                  description: Tom is british short hair
+      responses:
+        '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 200
+                  message: Post pet success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Wrong input data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    get:
+      tags: 
+        - Pets
+      summary: get all pet data
+      description: fitur untuk menampilkan seluruh data pet
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetData'
+              example:
+                data:
+                  - id: 1
+                    petname: Tom
+                    petphoto: Tom.jpg
+                    species: Kucing
+                    gender: 1
+                    age: 12
+                    color: Blue
+                    description: Tom is british short hair
+                  - id: 2
+                    petname: Bob
+                    petphoto: Bob.jpg
+                    species: Anjing
+                    gender: 2
+                    age: 10
+                    color: Gray
+                    description: Bob is cute dog
+                  - id: 3
+                    petname: Chicka
+                    petphoto: Chicka.jpg
+                    species: Burung
+                    gender: 1
+                    age: 13
+                    color: Yellow
+                    description: Tom is british short hair
+                code: 200
+                message: Success get pet
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /pets/{petid}:
+    put:
+      tags:
+        - Pets
+      summary: update pet profile
+      description: fitur untuk memperbarui profil data pet
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: petid
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/PetData'
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/PetData'
+                example:
+                  petname: Tom
+                  petphoto: Tom.jpg
+                  species: Kucing
+                  gender: 1
+                  age: 12
+                  color: Blue
+                  description: Tom is british short hair
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success update data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Please enter data correctly
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    get:
+      tags: 
+        - Pets
+      summary: get all pet data
+      description: fitur untuk menampilkan seluruh data pet
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: petid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetData'
+              example:
+                data:
+                  petname: Tom
+                  petphoto: Tom.jpg
+                  species: Kucing
+                  gender: 1
+                  age: 12
+                  color: Blue
+                  description: Tom is british short hair
+                  ownername: John
+                  city: Jakarta
+                code: 200
+                message: Success get pet
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Pets
+      summary: delete pet data
+      description: fitur untuk menghapus data pet
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: petid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 200
+                message: Success delete pet data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /mypets:
+    get:
+      tags: 
+        - Pets
+      summary: get all user pet data
+      description: fitur untuk menampilkan seluruh data pet
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PetData'
+              example:
+                data:
+                  - petname: Tom
+                    petphoto: Tom.jpg
+                    species: Kucing
+                    gender: 1
+                    age: 12
+                    color: Blue
+                    description: Tom is british short hair
+                  - petname: Bob
+                    petphoto: Bob.jpg
+                    species: Anjing
+                    gender: 2
+                    age: 10
+                    color: Gray
+                    description: Bob is cute dog
+                  - petname: Chicka
+                    petphoto: Chicka.jpg
+                    species: Burung
+                    gender: 1
+                    age: 13
+                    color: Yellow
+                    description: Tom is british short hair
+                code: 200
+                message: Success get my pet
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /adoptions:
+    post:
+      tags:
+        - Adoptions
+      summary: Post pets adoption
+      description: fitur untuk posting adoption
+      requestBody:
+         content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/AdoptionData'
+                example:
+                  petid: 1
+      responses:
+        '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 200
+                  message: Post pet success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Wrong input data
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+    get:
+      tags: 
+        - Adoptions
+      summary: get user adoption data
+      description: fitur untuk menampilkan seluruh data adoption
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdoptionData'
+              example:
+                data:
+                  - petname: Tom
+                    petphoto: Tom.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Waiting
+                  - petname: Bob
+                    petphoto: Bob.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Ok
+                  - petname: Chicka
+                    petphoto: Chicka.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Waiting
+                  
+                code: 200
+                message: Success get adoption data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /adoptions/{adoptionid}:
+    get:
+      tags: 
+        - Adoptions
+      summary: get user adoption data
+      description: fitur untuk menampilkan seluruh data adoption
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: adoptionid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdoptionData'
+              example:
+                data:
+                  - petname: Tom
+                    petphoto: Tom.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Waiting
+                code: 200
+                message: Success get adoption data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Adoptions
+      summary: update adoption status
+      description: fitur untuk memperbarui profil data pet
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: adoptionid
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/AdoptionData'
+                example:
+                  adoptionid: 1
+                  status: Ok
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success update data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Please enter data correctly
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Adoptions
+      summary: delete pet data
+      description: fitur untuk menghapus data pet
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: adoptionid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 200
+                message: Success delete adoption data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /myadoption:
+     get:
+      tags: 
+        - Adoptions
+      summary: get user adoption data
+      description: fitur untuk menampilkan seluruh data adoption
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdoptionData'
+              example:
+                data:
+                  - petname: Tom
+                    petphoto: Tom.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Waiting
+                  - petname: Bob
+                    petphoto: Bob.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Ok
+                  - petname: Chicka
+                    petphoto: Chicka.jpg
+                    ownername: John
+                    ownerphoto: John.jpg
+                    owneraddress: Jakarta
+                    status: Waiting
+                  
+                code: 200
+                message: Success get adoption data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /meetings:
+    post:
+      tags:
+        - Meetings
+      summary: Post meeting with seeker
+      description: fitur untuk posting meeting
+      requestBody:
+         content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/MeetingData'
+                example:
+                  adoptionid: 1
+                  time: 09:00:00
+                  date: 21-12-00
+      responses:
+        '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 200
+                  message: Post pet success
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Wrong input data
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+    get:
+      tags: 
+        - Meetings
+      summary: get user meeting data
+      description: fitur untuk menampilkan seluruh data adoption
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingData'
+              example:
+                data:
+                  - time: 09:00:00
+                    date: 21-12-00
+                    petname: Tom
+                    petphoto: Tom.jpg
+                    ownername: John
+                    ownerphoto: john.jpg
+                    owneraddress: Jakarta
+                  - time: 09:00:00
+                    date: 21-12-00
+                    petname: Bob
+                    petphoto: Bob.jpg
+                    ownername: John
+                    ownerphoto: john.jpg
+                    owneraddress: Jakarta
+                  - time: 09:00:00
+                    date: 21-12-00
+                    petname: Chicka
+                    petphoto: Chicka.jpg
+                    ownername: John
+                    ownerphoto: john.jpg
+                    owneraddress: Jakarta
+                code: 200
+                message: Success get meeting
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    put:
+      tags:
+        - Meetings
+      summary: update adoption status
+      description: fitur untuk memperbarui profil data pet
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/PetData'
+                example:
+                  time: 09:00:00
+                  date: 21-11-00
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success update data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Please enter data correctly
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+  /meetings/{meetingid}:
+    delete:
+      tags:
+        - Meetings
+      summary: delete meeting data
+      description: fitur untuk menghapus data meeting
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: meetingid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 200
+                message: Success delete meeting data
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"  
+  /species:
+    post:
+      tags:
+        - Species
+      summary: Post species for combobox
+      description: fitur untuk menambah list species
+      requestBody:
+         content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/SpeciesData'
+                example:
+                  species: Kucing
+      responses:
+        '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 200
+                  message: Post pet species
+        '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 401
+                  message: unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+    get:
+      tags: 
+        - Species
+      summary: get user species data
+      description: fitur untuk menampilkan seluruh data species
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeciesData'
+              example:
+                data:
+                  - Kucing
+                  - Anjing
+                  - Burung
+                  - Ikan
+                code: 200
+                message: Success get species data
+        '404':
+          $ref: "#/components/responses/404"
+        '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 401
+                  message: unauthorized
+        '500':
+          $ref: "#/components/responses/500"
+  /species/{speciesid}:
+    put:
+      tags:
+        - Species
+      summary: update species data
+      description: fitur untuk memperbarui data species
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: speciesid
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/SpeciesData'
+                example:
+                  species: Kucing
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 200
+                message: Success update data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 400
+                message: Please enter data correctly
+        '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 401
+                  message: unauthorized
+        '404':
+          $ref: "#/components/responses/404"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Species
+      summary: delete species data
+      description: fitur untuk menghapus data species
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: speciesid
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 200
+                message: Success delete species data
+        '404':
+          $ref: "#/components/responses/404"
+        '401':
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  code: 401
+                  message: unauthorized
+        '500':
+          $ref: "#/components/responses/500"
+components:
+  schemas:
+    UserData:
+      type: object
+      properties:
+        id:
+          type: integer
+        photoprofile:
+          type: string
+          format: binary
+        fullname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          type: string
+        city:
+          type: string
+        phonenumber:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          items:
+            $ref: '#/components/schemas/UserData'
+    PetData:
+      type: object
+      properties:
+        petname:
+          type: string
+        petphoto:
+          type: string
+          format: binary
+        species:
+          type: string
+        gender:
+          type: integer
+        age:
+          type: integer
+        color:
+          type: string
+        description:
+          type: string
+    AdoptionData:
+      type: object
+      properties:
+        id:
+          type: integer
+        userid:
+          type: integer
+        petid:
+          type: integer
+        status:
+          type: string
+    MeetingData:
+      type: object
+      properties:
+        id:
+          type: integer
+        adoptionid:
+          type: integer
+        time:
+          type: integer
+          format: time
+        date:
+          type: integer
+          format: date
+    SpeciesData:
+      type: object
+      properties:
+        id:
+          type: integer
+        species:
+          type: string
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: string
+          example: 
+            code: 200
+            message: Success
+    '404':
+          description: Data Not Found
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 404
+                message: Data not found
+    '409':
+          description: Duplicated data
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 409
+                message: Data is exist
+    '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal server error
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: JWT Authentication
+      scheme: bearer
+      bearerFormat: JWT
