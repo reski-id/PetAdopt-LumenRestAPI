@@ -15,7 +15,15 @@ class CreatePetsTable extends Migration
     {
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
+            $table->string('user_id');
+            $table->string('petname', 25);
+            $table->enum('gender', ['Jantan', 'Betina']);
+            $table->smallInteger('age');
+            $table->string('color', 15);
+            $table->text('description');
+            $table->text('petphoto');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

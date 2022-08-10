@@ -15,7 +15,9 @@ class CreateMeetingTable extends Migration
     {
         Schema::create('meeting', function (Blueprint $table) {
             $table->id();
+            $table->string('adoptions_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
